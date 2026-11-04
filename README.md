@@ -8,6 +8,9 @@
 - 실제 실행 명령과 출력: [docs/verification-log.md](docs/verification-log.md)
 - 요구사항별 근거: [docs/requirement-mapping.md](docs/requirement-mapping.md)
 - 문제 해결 기록: [docs/troubleshooting.md](docs/troubleshooting.md)
+- 실제 Docker 명령·웹 응답 PNG: [evidence/screenshots](evidence/screenshots)
+
+PNG는 [`scripts/generate_evidence_png.py`](scripts/generate_evidence_png.py)가 실제 Docker 명령을 다시 실행해 생성한다. 필요한 렌더링 의존성은 [`requirements-evidence.txt`](requirements-evidence.txt)에 분리했다.
 
 ## 재현 실행
 

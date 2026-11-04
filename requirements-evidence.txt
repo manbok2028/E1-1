@@ -1,0 +1,2 @@
+# Dependency used only to render live command output into PNG evidence.
+Pillow==12.3.0

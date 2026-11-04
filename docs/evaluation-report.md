@@ -15,6 +15,7 @@
 | Docker 볼륨 | 컨테이너 삭제 후에도 `persistent-data-ok` 유지 | [실행 로그 7절](verification-log.md#7-docker-볼륨-영속성) |
 | GitHub | `origin`이 `manbok2028/E1-1`로 연결되고 최종 푸시 | [실행 로그 9절](verification-log.md#9-gitgithub-연동) |
 | Compose 보너스 | 웹 서버+상태 서비스 멀티 컨테이너, 서비스 이름 통신, 환경 변수 주입 | [실행 로그 8절](verification-log.md#8-compose-보너스-운영-명령환경-변수멀티-컨테이너) |
+| PNG 시각 증빙 | 실제 명령 출력과 웹 페이지를 생성 스크립트로 PNG화 | [evidence/screenshots](../evidence/screenshots) |
 
 ## 2. 설계 판단
 
