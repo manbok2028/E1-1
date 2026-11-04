@@ -25,6 +25,18 @@ docker logs e1-1-web
 docker stats --no-stream e1-1-web
 ```
 
+### 보너스: Compose 멀티 컨테이너
+
+`docker-compose.yml`은 웹 서버와 `status-api`를 같은 Compose 네트워크에서 실행한다. 웹 컨테이너 내부에서 서비스 이름으로 상태 API를 호출하고, Compose 환경 변수도 확인할 수 있다.
+
+```powershell
+docker compose up -d --build
+docker compose exec workstation-web sh -c 'echo $APP_MODE'
+docker compose exec workstation-web wget -qO- http://status-api:5678
+docker compose logs --tail 20
+docker compose down
+```
+
 Windows PowerShell에서는 다음 스크립트로 공개 포트·컨테이너 상태를 다시 확인할 수 있습니다.
 
 ```powershell

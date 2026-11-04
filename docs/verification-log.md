@@ -182,7 +182,7 @@ persistent-data-ok  # 두 번째 컨테이너 삭제 뒤에도 읽기 성공
 
 볼륨은 특정 컨테이너의 쓰기 레이어와 분리되어 Docker가 관리하는 저장 공간이다. 그래서 컨테이너를 삭제해도 볼륨 자체를 삭제하지 않는 한 데이터가 유지된다.
 
-## 8. Compose 보너스
+## 8. Compose 보너스: 운영 명령·환경 변수·멀티 컨테이너
 
 ```powershell
 docker compose up -d --build
@@ -193,6 +193,24 @@ docker compose down
 ```
 
 실제 결과는 `e1-1-compose-web`이 `0.0.0.0:18082->8080/tcp`으로 실행되고, HTTP `200` 로그와 v2 문구가 반환된 뒤 `docker compose down`으로 네트워크·컨테이너가 정리된 것이다. Compose는 긴 `docker run` 명령을 `docker-compose.yml`이라는 버전 관리 가능한 실행 설정으로 바꿔 준다.
+
+추가로 `status-api` 서비스를 Compose 네트워크에 넣었다. `workstation-web`은 `APP_MODE=compose-lab` 환경 변수로 실행되고, 같은 네트워크의 서비스 이름 `status-api`를 DNS 이름으로 사용한다.
+
+```powershell
+docker compose up -d --build
+docker compose exec workstation-web sh -c 'echo $APP_MODE'
+docker compose exec workstation-web wget -qO- http://status-api:5678
+docker compose ps
+docker compose logs --tail 20
+docker compose down
+```
+
+2026-11-04에 실제 실행한 결과는 아래와 같다.
+
+```text
+compose-lab
+compose-network-ok
+```
 
 ## 9. Git·GitHub 연동
 

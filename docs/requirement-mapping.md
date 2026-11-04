@@ -14,4 +14,5 @@
 | 볼륨 영속성 | 컨테이너 A 삭제 뒤 B와 일회성 컨테이너에서 파일 재확인 | [실행 로그 7절](verification-log.md#7-docker-볼륨-영속성) |
 | Git·GitHub | global 설정(마스킹), `origin`, 원격 main, 최종 push | [실행 로그 9절](verification-log.md#9-gitgithub-연동) |
 | 트러블슈팅 2건 이상 | 권한 기본값, 바인드 마운트 경로, health 상태 관찰 | [트러블슈팅](troubleshooting.md) |
-| 보너스 Compose | `up`, `ps`, `logs`, `down` 실제 실행 | [docker-compose.yml](../docker-compose.yml), [실행 로그 8절](verification-log.md#8-compose-보너스) |
+| 보너스 Compose 기본·운영 | `up`, `ps`, `logs`, `down` 실제 실행 | [docker-compose.yml](../docker-compose.yml), [실행 로그 8절](verification-log.md#8-compose-보너스-운영-명령환경-변수멀티-컨테이너) |
+| 보너스 Compose 멀티 컨테이너·환경 변수 | `workstation-web` + `status-api` 서비스, 서비스 이름 통신, `APP_MODE=compose-lab` 주입 | [docker-compose.yml](../docker-compose.yml), [실행 로그 8절](verification-log.md#8-compose-보너스-운영-명령환경-변수멀티-컨테이너) |

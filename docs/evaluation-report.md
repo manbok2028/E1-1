@@ -14,6 +14,7 @@
 | 바인드 마운트 | v1 → v2 변경이 재시작 없이 반영 | [실행 로그 6절](verification-log.md#6-바인드-마운트-반영) |
 | Docker 볼륨 | 컨테이너 삭제 후에도 `persistent-data-ok` 유지 | [실행 로그 7절](verification-log.md#7-docker-볼륨-영속성) |
 | GitHub | `origin`이 `manbok2028/E1-1`로 연결되고 최종 푸시 | [실행 로그 9절](verification-log.md#9-gitgithub-연동) |
+| Compose 보너스 | 웹 서버+상태 서비스 멀티 컨테이너, 서비스 이름 통신, 환경 변수 주입 | [실행 로그 8절](verification-log.md#8-compose-보너스-운영-명령환경-변수멀티-컨테이너) |
 
 ## 2. 설계 판단
 
@@ -22,6 +23,7 @@
 - **개발 중 변경 확인**에는 호스트 폴더를 연결하는 바인드 마운트를 사용했다.
 - **컨테이너 삭제 뒤에도 남아야 할 데이터**에는 Docker 관리 볼륨을 사용했다.
 - **반복 실행**에는 Dockerfile과 Compose 파일을 저장소에 넣어 명령을 문서화했다.
+- **보너스 멀티 컨테이너**에는 Compose 네트워크에서 웹 서버가 `status-api`를 서비스 이름으로 호출하도록 구성했다.
 - **운영 확인**에는 `docker ps -a`, `docker logs`, `docker stats`, `/health`, `curl`을 사용했다.
 
 ## 3. 학습 목표 설명
