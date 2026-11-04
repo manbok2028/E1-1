@@ -51,6 +51,67 @@
 
 Docker/GitHub 인증 정보는 환경 또는 자격 증명 관리자에 두며 저장소에 넣지 않는다. `.gitignore`는 `.env`, 키 파일을 제외한다. 실행 로그에는 Git 이메일을 마스킹하고, 토큰·비밀번호·인증 코드·개인키를 기록하지 않았다.
 
-## 6. 결론
+## 6. 보너스 과제 실행 결과
+
+선택 과제 중 Docker Compose 기본·운영, 멀티 컨테이너 네트워크 통신, 환경 변수 활용을 실제로 실행했다. 구성 파일은 [docker-compose.yml](../docker-compose.yml)에 있으며, 모든 명령과 출력은 [실행 로그 8절](verification-log.md#8-compose-보너스-운영-명령환경-변수멀티-컨테이너)에 남겼다.
+
+### 6-1. Compose 기본 실행과 운영 명령
+
+```powershell
+docker compose up -d --build
+docker compose ps
+docker compose logs --tail 20
+docker compose down
+```
+
+실행 결과, `e1-1-compose-web` 컨테이너는 호스트 `18082` 포트와 컨테이너 `8080` 포트를 연결해 실행됐고, 종료 명령 뒤에는 Compose 컨테이너와 네트워크가 정리됐다. 이는 긴 `docker run` 명령을 저장소 안의 선언형 실행 설정으로 관리하는 Compose의 목적을 확인한 것이다.
+
+### 6-2. 멀티 컨테이너와 서비스 디스커버리
+
+Compose에 다음 두 서비스를 정의했다.
+
+| 서비스 | 역할 | 네트워크 확인 |
+| --- | --- | --- |
+| `workstation-web` | NGINX 기반 정적 웹 서버 | `18082:8080`으로 외부 공개 |
+| `status-api` | `hashicorp/http-echo` 기반 상태 응답 서비스 | Compose 내부 DNS 이름 `status-api:5678` |
+
+웹 컨테이너에서 서비스 이름을 도메인처럼 사용해 실제 통신을 검증했다.
+
+```powershell
+docker compose exec -T workstation-web wget -qO- http://status-api:5678
+```
+
+```text
+compose-network-ok
+```
+
+이는 컨테이너 IP 주소를 하드코딩하지 않고도 Compose 네트워크가 서비스 이름을 찾아 연결한다는 증거다. 실제 Compose 로그에도 `status-api:5678 ... "GET / HTTP/1.1" 200`이 기록됐다.
+
+### 6-3. 환경 변수 활용
+
+`docker-compose.yml`의 `workstation-web` 서비스에 다음 환경 변수를 주입했다.
+
+```yaml
+environment:
+  APP_MODE: compose-lab
+```
+
+실제 컨테이너 내부에서 확인한 명령과 결과는 다음과 같다.
+
+```powershell
+docker compose exec -T workstation-web sh -c 'echo $APP_MODE'
+```
+
+```text
+compose-lab
+```
+
+환경 변수를 코드나 이미지 자체에 고정하지 않고 실행 설정에서 주입하면, 같은 이미지를 개발·검증·운영 환경에서 서로 다른 설정으로 재사용할 수 있다.
+
+### 6-4. 선택하지 않은 보너스 범위
+
+GitHub SSH 키 등록은 개인 계정에 장기 인증 수단을 추가하는 보안 작업이므로, 저장소 코드나 문서에 키를 만들거나 비공개 키를 기록하지 않았다. 현재 저장소는 HTTPS 원격과 실제 `git push`로 GitHub 연동을 검증했다. SSH 방식이 필요한 경우에는 사용자가 자신의 VS Code/GitHub 인증을 마친 뒤 공개키만 GitHub 계정에 등록하고, 비공개 키는 로컬 보안 저장소에만 보관해야 한다.
+
+## 7. 결론
 
 이 결과물은 명령 한 줄의 성공을 보여 주는 데 그치지 않고, 이미지와 컨테이너의 구분, 네트워크 포트 연결, 바인드 마운트의 실시간 반영, 볼륨의 영속성, 원격 Git 협업을 실제 결과로 연결했다. 따라서 평가자는 README와 연결 문서만으로 동일한 개발 작업실을 재현하고 각 요구사항을 검증할 수 있다.
