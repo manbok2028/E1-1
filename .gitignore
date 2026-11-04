@@ -1,0 +1,9 @@
+# Docker / editor temporary data
+*.log
+.vscode/
+evidence/private/
+
+# Credentials must never be committed
+.env
+*.pem
+*.key
