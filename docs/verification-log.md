@@ -232,3 +232,28 @@ origin https://github.com/manbok2028/E1-1.git (push)
 ```
 
 Git은 내 컴퓨터에서 변경 이력·브랜치를 관리하는 도구이고, GitHub는 그 Git 저장소를 원격으로 공유하고 협업하는 플랫폼이다. 이 저장소는 원격 `origin`이 `manbok2028/E1-1`에 연결되어 있으며, 최종 커밋 푸시로 연동을 다시 확인한다.
+
+## 10. 제출 직전 Docker 볼륨 재검증 (2026-11-05)
+
+평가 예시에 맞춰 `e1-1-data`라는 별도 Docker 관리 볼륨을 새로 만들고, 컨테이너 삭제 뒤에도 데이터가 남는지를 다시 실측했다. 기존 7절의 `e1-1-workstation-data` 검증과 별도의 추가 검증이다.
+
+```powershell
+docker volume create e1-1-data
+docker run -d --name e1-1-vol -v e1-1-data:/data ubuntu:latest sleep infinity
+docker exec e1-1-vol bash -lc "printf 'volume-persistence-confirmed-2026-11-05\n' > /data/evaluator-proof.txt; cat /data/evaluator-proof.txt"
+docker rm -f e1-1-vol
+docker run --rm -v e1-1-data:/data ubuntu:latest bash -lc "cat /data/evaluator-proof.txt"
+docker volume inspect e1-1-data --format "Name={{.Name}} Mountpoint={{.Mountpoint}}"
+```
+
+실제 출력:
+
+```text
+e1-1-data
+volume-persistence-confirmed-2026-11-05
+e1-1-vol
+volume-persistence-confirmed-2026-11-05
+Name=e1-1-data Mountpoint=/var/lib/docker/volumes/e1-1-data/_data
+```
+
+첫 번째 값은 볼륨 생성, 두 번째 값은 첫 컨테이너에서 쓴 파일, 세 번째 값은 삭제된 컨테이너 이름, 네 번째 값은 새 컨테이너에서 재확인한 동일 파일이다. 이로써 컨테이너만 삭제되고 볼륨 데이터는 유지됨을 확인했다. 상세 설명은 [volume-lab.md](volume-lab.md)에 정리했다.

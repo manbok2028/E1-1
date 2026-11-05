@@ -1,5 +1,22 @@
 # E1-1 최종 평가 보고서
 
+## 평가용 개요
+
+| 항목 | 내용 |
+| --- | --- |
+| 과제명 | E1-1 · 내 컴퓨터에 개발자용 작업실 꾸미기 |
+| 제출 저장소 | `https://github.com/manbok2028/E1-1` (`main` 브랜치) |
+| 구현 범위 | Linux CLI·권한, Docker 이미지/컨테이너/포트/마운트/볼륨, Git·GitHub, Compose 보너스 |
+| 핵심 결과 | NGINX 기반 커스텀 이미지를 실제 실행하고, HTTP 200·헬스체크·바인드 마운트 반영·볼륨 영속성을 명령 출력으로 확인 |
+| 재현 시작점 | [README](../README.md)의 명령, [실행 로그](verification-log.md), [PNG 증빙](../evidence/screenshots) |
+| 제출 직전 재검증 | 2026-11-05 `e1-1-data`에 파일 기록 → `e1-1-vol` 삭제 → 새 컨테이너에서 같은 파일 읽기 성공 ([상세 기록](volume-lab.md)) |
+
+### 평가자가 먼저 볼 세 가지
+
+1. [README](../README.md): 복사해 실행할 수 있는 재현 명령과 결과물 구조
+2. [volume-lab.md](volume-lab.md): 컨테이너 삭제 뒤에도 데이터가 남는지 확인한 제출 직전 실측 결과
+3. [evidence/screenshots](../evidence/screenshots): `hello-world`, 포트 응답, 권한 수정, 바인드 마운트, 볼륨 영속성을 보여 주는 PNG
+
 ## 1. 과제 목표와 완성 결과
 
 이 과제의 목표는 “내 컴퓨터에서만 되는 실행”이 아니라, 터미널 명령·Dockerfile·포트·스토리지·Git 기록으로 누구나 같은 절차를 재현할 수 있는 개발 작업실을 만드는 것이다.
@@ -12,7 +29,7 @@
 | 커스텀 이미지 | NGINX 설정·정적 페이지·환경 변수·헬스체크 포함 | [실행 로그 4절](verification-log.md#4-dockerfile-커스텀-이미지) |
 | 웹 접속 | `http://localhost:18080`에서 HTTP 200 | [실행 로그 5절](verification-log.md#5-포트-매핑접속운영-로그) |
 | 바인드 마운트 | v1 → v2 변경이 재시작 없이 반영 | [실행 로그 6절](verification-log.md#6-바인드-마운트-반영) |
-| Docker 볼륨 | 컨테이너 삭제 후에도 `persistent-data-ok` 유지 | [실행 로그 7절](verification-log.md#7-docker-볼륨-영속성) |
+| Docker 볼륨 | 컨테이너 삭제 후에도 `persistent-data-ok` 및 제출 직전 `volume-persistence-confirmed-2026-11-05` 유지 | [볼륨 실습 기록](volume-lab.md) |
 | GitHub | `origin`이 `manbok2028/E1-1`로 연결되고 최종 푸시 | [실행 로그 9절](verification-log.md#9-gitgithub-연동) |
 | Compose 보너스 | 웹 서버+상태 서비스 멀티 컨테이너, 서비스 이름 통신, 환경 변수 주입 | [실행 로그 8절](verification-log.md#8-compose-보너스-운영-명령환경-변수멀티-컨테이너) |
 | PNG 시각 증빙 | 실제 명령 출력과 웹 페이지를 생성 스크립트로 PNG화 | [evidence/screenshots](../evidence/screenshots) |
@@ -45,7 +62,7 @@
 3. `curl.exe -i http://localhost:18080/`과 `curl.exe -i http://localhost:18080/health`에서 HTTP 200을 확인한다.
 4. `docs/verification-log.md`에서 실제 명령과 결과를 대조한다.
 5. `docker run` 바인드 마운트 명령을 실행한 뒤 `app/index.html`의 v2 문구를 바꿔 변경이 즉시 반영되는지 확인한다.
-6. 볼륨 명령으로 컨테이너 삭제 후 데이터가 유지되는지 확인한다.
+6. [볼륨 실습 기록](volume-lab.md)의 명령으로 컨테이너 삭제 후 데이터가 유지되는지 확인한다.
 7. `git remote -v`, `git log --oneline -1`, GitHub 저장소의 최신 커밋을 대조한다.
 
 ## 5. 보안·개인정보 보호

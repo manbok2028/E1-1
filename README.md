@@ -6,6 +6,7 @@
 
 - 최종 평가 보고서: [docs/evaluation-report.md](docs/evaluation-report.md)
 - 실제 실행 명령과 출력: [docs/verification-log.md](docs/verification-log.md)
+- Docker 볼륨 영속성 실습: [docs/volume-lab.md](docs/volume-lab.md)
 - 요구사항별 근거: [docs/requirement-mapping.md](docs/requirement-mapping.md)
 - 문제 해결 기록: [docs/troubleshooting.md](docs/troubleshooting.md)
 - 실제 Docker 명령·웹 응답 PNG: [evidence/screenshots](evidence/screenshots)
@@ -39,6 +40,20 @@ docker compose exec workstation-web wget -qO- http://status-api:5678
 docker compose logs --tail 20
 docker compose down
 ```
+
+### 필수 확인: Docker 볼륨 영속성
+
+컨테이너를 삭제해도 데이터가 유지되는지를 실제로 확인했다. `e1-1-data`에 파일을 기록하고 컨테이너 `e1-1-vol`을 삭제한 뒤, 새 컨테이너에서 같은 파일을 다시 읽었다.
+
+```powershell
+docker volume create e1-1-data
+docker run -d --name e1-1-vol -v e1-1-data:/data ubuntu:latest sleep infinity
+docker exec e1-1-vol bash -lc "printf 'volume-persistence-confirmed-2026-11-05\n' > /data/evaluator-proof.txt"
+docker rm -f e1-1-vol
+docker run --rm -v e1-1-data:/data ubuntu:latest bash -lc "cat /data/evaluator-proof.txt"
+```
+
+실제 출력은 `volume-persistence-confirmed-2026-11-05`였다. 전체 기록은 [볼륨 실습 문서](docs/volume-lab.md)에, 기존 시각 증빙은 [05-volume-persistence.png](evidence/screenshots/05-volume-persistence.png)에 있다.
 
 Windows PowerShell에서는 다음 스크립트로 공개 포트·컨테이너 상태를 다시 확인할 수 있습니다.
 
